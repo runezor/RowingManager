@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Welcome!</h2>
+Here are the pages you may find interesting...
+<ul>
+  <li><a href="/myOutings">View my outings </a></li>
+  <li><a href="/signupSheet/RW">Sign up for outings as a rower</a>
+    <ul>
+      <li><a href="/signupSheet/CX">Sign up for outings as a cox</a></li>
+      <li><a href="/signupSheet/CC">Sign up for outings as a coach</a></li>
+    </ul>
+  </li>
+  <li><a href="/ergBooking">Book ergs</a></li>
+  <li><a href="/myWorkouts">View my erg workouts</a>
+    <ul>
+      <li><a href="/createWorkout">Add erg workout</a></li>
+    </ul>
+  </li>
+  <li><a href="/myProfile">View my profile </a></li>
+  <li><a href="/ergManager/teams/0">Manage team ergs (captains only) </a></li>
+  <li><a href="/outings">Manage outings (captains only) </a></li>
+  <li><a href="/createOuting">Create outings (captains only) </a></li>
+</ul>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Your profile</h2>
+Username: {{user.username}}
+<h2>Your teams</h2>
+{% if teams|length == 0 %}
+You're not signed up for any teams at the moment
+{% endif %}
+{% for team in teams %}
+{{team.name}}<br>
+{% endfor %}
+
+<hr>
+
+<a href="/accounts/logout" class="btn btn-secondary">LOGOUT</a>
+<a href="/accounts/password_change" class="btn btn-warning">CHANGE PASSWORD</a>
+{% endblock %}

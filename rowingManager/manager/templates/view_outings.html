@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Your upcoming outings</h2>
+<table>
+    {% for outing in outings %}
+    <tr>
+        <th>{{ outing.boat }}</th>
+        <th>{{ outing.team }}</th>
+        <th>{{ outing.date }}</th>
+        <th>{{ outing.meetingTime }}</th>
+        <th>{{ outing.get_status_display  }}</th>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

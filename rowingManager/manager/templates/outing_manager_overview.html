@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Outing Manager</h2>
+<table>
+    <tr>
+        <th>BOAT</th>
+        <th>TEAM</th>
+        <th>DATE</th>
+        <th>MEETING TIME</th>
+        <th>ROWER SIGNUP</th>
+        <th>COX SIGNUP</th>
+        <th>COACH SIGNUP</th>
+        <th>ROWERS</th>
+        <th>COX</th>
+        <th>COACH</th>
+        <th>STATUS</th>
+        <th></th>
+    </tr>
+    {% for oData in outingData %}
+    <tr>
+        <th>{{ oData.outing.boat }}</th>
+        <th>{{ oData.outing.team }}</th>
+        <th>{{ oData.outing.date }}</th>
+        <th>{{ oData.outing.meetingTime }}</th>
+        <th {% if oData.rowerSignup < oData.outing.boat.size %} style="background-color: red" {% else %} style="background-color: green" {% endif %}>{{ oData.rowerSignup }}</th>
+        <th {% if oData.coxSignup < 1 %} style="background-color: red" {% else %} style="background-color: green" {% endif %}>{{ oData.coxSignup }}</th>
+        <th {% if oData.coachSignup < 1 %} style="background-color: red" {% else %} style="background-color: green" {% endif %}>{{ oData.coachSignup }}</th>
+        <th {% if oData.rowerCount == oData.outing.boat.size %} style="background-color: green" {% else %} style="background-color: red" {% endif %}>{{ oData.rowerCount }} / {{oData.outing.boat.size}}</th>
+        <th {% if oData.coxCount == 1 %} style="background-color: green" {% else %} style="background-color: red" {% endif %}>{{ oData.coxCount }}</th>
+        <th {% if oData.coachCount == 1 %} style="background-color: green" {% else %} style="background-color: red" {% endif %}>{{ oData.coachCount }}</th>
+        <th>{{ oData.outing.get_status_display }}</th>
+        <th><a href="/outings/{{oData.outing.id}}" class="btn btn-primary">Manage</a></th>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

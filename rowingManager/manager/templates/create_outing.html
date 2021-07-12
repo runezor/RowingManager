@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Create new outing</h2>
+
+  <form action="" method="post">
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    </table>
+    <br>
+    <input type="number" min="1" max="5" id="repeat" name="repeat" value="1">
+          <label for="repeat">Consecutive days</label><br>
+    <input type="submit" value="Submit">
+  </form>
+{% endblock %}

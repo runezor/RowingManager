@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Outing Manager</h2>
+
+<form action="/outings/{{outing.id}}/" method="post">
+    {% csrf_token %}
+    {% for availability in available_rowers %}
+    {% if availability.person.id in rowers %}
+    <input type="checkbox" id="check{{availability.person.id}}" name="row_{{availability.person.id}}"
+           value="{{availability.person.id}}" checked>
+    <label for="check{{availability.person.id}}">{{availability.person.username}}</label><br>
+    {% else %}
+    <input type="checkbox" id="check{{availability.person.id}}" name="row_{{availability.person.id}}"
+           value="{{availability.person.id}}">
+    <label for="check{{availability.person.id}}">{{availability.person.username}}</label><br>
+    {% endif %}
+    {% endfor %}
+    <label for="cox">Choose a cox:</label>
+    <select name="cox" id="cox">
+        {% for availability in available_coxes %}
+        {% if availability.person.id in coxes %}
+        <option selected="selected" value="{{availability.person.id}}">{{availability.person.username}}</option>
+        {% else %}
+        <option value="{{availability.person.id}}">{{availability.person.username}}</option>
+        {% endif %}
+        {% endfor %}
+    </select>
+    <br>
+    <label for="cox">Choose a coach:</label>
+    <select name="coach" id="coach">
+        {% for availability in available_coaches %}
+        {% if availability.person.id in coaches %}
+        <option selected="selected" value="{{availability.person.id}}">{{availability.person.username}}</option>
+        {% else %}
+        <option value="{{availability.person.id}}">{{availability.person.username}}</option>
+        {% endif %}
+        {% endfor %}
+    </select>
+    <br>
+    <label for="cox">Outing Status:</label>
+    <select name="status" id="status">
+        <option {% if outing.status == "P" %} selected="selected" {% endif %} value="P">Pending</option>
+        <option {% if outing.status == "CF" %} selected="selected" {% endif %} value="CF">Confirmed</option>
+        <option {% if outing.status == "CC" %} selected="selected" {% endif %} value="CC">Cancelled</option>
+    </select>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+<br>
+<a href="/outings/" class="btn btn-primary">Back</a>
+{% endblock %}

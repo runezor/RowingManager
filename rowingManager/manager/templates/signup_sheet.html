@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Sign up for outings as a {{typeName}}</h2>
+<select name="form" onchange="location = this.value;">
+ <option {% if type == "RW" %} selected="selected" {% endif %} value="RW">Rower</option>
+ <option {% if type == "CX" %} selected="selected" {% endif %} value="CX">Cox</option>
+ <option {% if type == "CC" %} selected="selected" {% endif %} value="CC">Coach</option>
+</select>
+<br>
+<br>
+<table>
+    {% for outing in outings %}
+    <tr>
+        <th>{{ outing.boat }}</th>
+        <th>{{ outing.team }}</th>
+        <th>{{ outing.date }}</th>
+        <th>{{ outing.meetingTime }}</th>
+        {% if outing.id in availabilities %}
+            <th><button id="btn{{outing.id}}" onclick="signoffOuting({{outing.id}})">Remove Availability</button></th>
+        {% else %}
+            <th><button id="btn{{outing.id}}" onclick="signupOuting({{outing.id}})">Join</button></th>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+<script>
+    function signupOuting(id) {
+        let dataForm = new FormData();
+        dataForm.append('outing',id)
+        dataForm.append('type','{{type}}')
+        var btn = document.getElementById('btn'+id)
+
+        body = {
+            method: 'post',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+                },
+            body: dataForm,
+            credentials: 'same-origin'
+        }
+        fetch('signup/', body).then(response => response.text()).then(data => (data=="Success!")?btn.disabled=true:alert(data))
+    }
+
+    function signoffOuting(id) {
+        let dataForm = new FormData();
+        dataForm.append('outing',id)
+        dataForm.append('type','{{type}}')
+        var btn = document.getElementById('btn'+id)
+
+        body = {
+            method: 'post',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+                },
+            body: dataForm,
+            credentials: 'same-origin'
+        }
+        fetch('signoff/', body).then(response => response.text()).then(data => (data=="Success!")?btn.disabled=true:alert(data))
+    }
+</script>
+{% endblock %}
+

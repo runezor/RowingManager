@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Register new erg workout</h2>
+<table>
+    <th>Date</th>
+    <th>Distance</th>
+    <th>Time</th>
+    <th>Split</th>
+    <th></th>
+    {% for wd in workoutData %}
+    <tr>
+        <th>{{ wd.workout.date }}</th>
+        <th>{{ wd.workout.distance }}</th>
+        <th>{{ wd.workout.minutes }}:{% if wd.workout.seconds < 10 %}0{% endif %}{{ wd.workout.seconds }}:{{ wd.workout.subSeconds }}</th>
+        <th>{{ wd.splitMin }}:{% if wd.splitSec < 10 %}0{% endif %}{{ wd.splitSec }}:{{ wd.splitSubSec }}</th>
+        <th><button onclick="deleteWorkout({{wd.workout.id}})" class="btn btn-danger">DELETE</button></th>
+    </tr>
+    {% endfor %}
+</table>
+
+<script>
+    function deleteWorkout(id) {
+        let dataForm = new FormData();
+        dataForm.append('w_id',id)
+        body = {
+            method: 'post',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+                },
+            body: dataForm,
+            credentials: 'same-origin'
+        }
+        fetch('/deleteWorkout/', body).then(response => response.text()).then(data => (data=="Success!")?location.reload():alert(data))
+    }
+</script>
+
+{% endblock %}

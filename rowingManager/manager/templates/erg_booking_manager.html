@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .header {
+      display: flex;
+      width: 100%;
+      overflow-x: scroll;
+    }
+
+    .item {
+      flex-basis: 100%;
+      margin: 20px;
+      text-align: center;
+      border: 1px solid black;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bookingContent {
+     display: inline-block;
+    }
+
+    .ergForm {
+     display: inline-block;
+     margin-top: auto;
+     align-self: flex-end;
+    }
+</style>
+
+<h2>Book ergs</h2>
+<div style="width: 100%">
+    {% for bookingDay in bookingDays %}
+    <h3>{{bookingDay.date}}</h3>
+    <div class="bg-light header">
+        <br>
+        {% for ergBooking in bookingDay.ergBookings%}
+        <div class="item">
+            {{ergBooking.erg}}
+            <hr>
+            <h5>Bookings</h5>
+            <div class="bookingContent">
+            {% for booking in ergBooking.bookings%}
+            {{booking.person}} booked {{booking.startTime}} for {{booking.hours}} hour(s)
+            {% if booking.person.id == currentUserId %}
+            <button onclick="deleteBooking({{booking.id}})" class="btn btn-danger">DELETE</button>
+            {% endif %}
+            <br>
+            {% endfor %}
+            <br>
+            </div>
+
+            <div class="ergForm">
+                <h5>Make booking</h5>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <table>
+                        {{ergBooking.form.as_table}}
+                    </table>
+                    <input type="submit" value="Book">
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+</div>
+
+<script>
+    function deleteBooking(id) {
+        let dataForm = new FormData();
+        dataForm.append('b_id',id)
+        body = {
+            method: 'post',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+                },
+            body: dataForm,
+            credentials: 'same-origin'
+        }
+        fetch('/deleteErgBooking/', body).then(response => response.text()).then(data => (data=="Success!")?location.reload():alert(data))
+    }
+
+
+
+
+
+</script>
+
+{% endblock %}

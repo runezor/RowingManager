@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>View erg workouts</h2>
+<select name="form" onchange="location = this.value;">
+{% for team in teams %}
+ <option {% if team.id == currentTeamId %} selected="selected" {% endif %} value="{{team.id}}">{{team.name}}</option>
+{% endfor %}
+</select>
+<br>
+<br>
+<div class="container">
+{% for wp in workoutProfiles %}
+    {% if forloop.first %}<div class="row">{% endif %}
+        {% if wp.isPadding %}
+        <div class="col-xs-4 ml-md-auto col-lg">
+            <div class="container-fluid p-3 mb-2 bg-light" style="height: 400px">
+            </div>
+        </div>
+        {% else %}
+        <div class="col-xs-4 ml-md-auto col-lg">
+            <div class="container-fluid p-3 mb-2 bg-light" style="height: 400px; overflow-y: scroll">
+                <h3>{{wp.user.username}}</h3>
+                <table>
+                    <th>Date</th>
+                    <th>Distance</th>
+                    <th>Time</th>
+                    <th>Split</th>
+                    {% for wd in wp.workoutDatas %}
+                    <tr>
+                        <th>{{ wd.workout.date }}</th>
+                        <th>{{ wd.workout.distance }}</th>
+                        <th>{{ wd.workout.minutes }}:{% if wd.workout.seconds < 10 %}0{% endif %}{{ wd.workout.seconds }}:{{wd.workout.subSeconds }}
+                        </th>
+                        <th>{{ wd.splitMin }}:{% if wd.splitSec < 10 %}0{% endif %}{{ wd.splitSec }}:{{ wd.splitSubSec }}</th>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+    {% if forloop.last %}</div>{% endif %}
+{% endfor %}
+</div>
+
+{% endblock %}
