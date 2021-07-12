@@ -1,0 +1,6 @@
+asgiref==3.4.0
+Django==3.2.5
+django-annoying==0.10.6
+pytz==2021.1
+six==1.16.0
+sqlparse==0.4.1
