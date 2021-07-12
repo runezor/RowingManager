@@ -46,7 +46,7 @@ class Outing(models.Model):
     boat = models.ForeignKey(Boat, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     meetingTime = models.TimeField()
-    status = models.CharField(max_length=2, choices=STATUS_TYPES)
+    status = models.CharField(max_length=255, choices=STATUS_TYPES)
 
 
 class InTeam(models.Model):
@@ -64,14 +64,14 @@ class InOuting(models.Model):
     OUTING_ROLES = [('RW', 'rower'), ('CX', 'cox'), ('CC', 'coach')]
     person = models.ForeignKey(User, on_delete=models.CASCADE)
     outing = models.ForeignKey(Outing, on_delete=models.CASCADE)
-    type = models.CharField(max_length=2, choices=OUTING_ROLES)
+    type = models.CharField(max_length=255, choices=OUTING_ROLES)
 
 
 class Available(models.Model):
     OUTING_ROLES = [('RW', 'rower'), ('CX', 'cox'), ('CC', 'coach')]
     person = models.ForeignKey(User, on_delete=models.CASCADE)
     outing = models.ForeignKey(Outing, on_delete=models.CASCADE)
-    type = models.CharField(max_length=2, choices=OUTING_ROLES)
+    type = models.CharField(max_length=255, choices=OUTING_ROLES)
 
 
 class ErgWorkout(models.Model):
