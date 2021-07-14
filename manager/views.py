@@ -75,8 +75,8 @@ def outing_manager_overview(request):
     if not is_captain(request.user):
         return render(request, 'no_permission.html', {})
     today = datetime.date.today()
-    context = {
-        'outingData': [{"outing": outing,
+
+    od = [{"outing": outing,
                         "rowerCount": InOuting.objects.filter(outing=outing.id).filter(type='RW').count(),
                         "coxCount": InOuting.objects.filter(outing=outing.id).filter(type='CX').count(),
                         "coachCount": InOuting.objects.filter(outing=outing.id).filter(type='CC').count(),
@@ -85,6 +85,9 @@ def outing_manager_overview(request):
                         "coachSignup": Available.objects.filter(outing=outing.id).filter(type='CC').count()} for outing
                        in Outing.objects.filter(date__gte=today)
                        ]
+
+    context = {
+        'outingData': sorted(od, key=lambda x: x["outing"].date)
     }
 
     return render(request, 'outing_manager_overview.html', context)
@@ -223,8 +226,9 @@ def my_outings(request):
     outings = [io.outing for io in InOuting.objects.filter(person=request.user.id)]
 
     today = datetime.date.today()
+
     context = {
-        'outings': filter(lambda x: x.date >= today, outings),
+        'outings': sorted(filter(lambda x: x.date >= today, outings), key=lambda x: x.date),
     }
     return render(request, 'view_outings.html', context)
 
@@ -314,7 +318,7 @@ def signup_page(request, type):
     today = datetime.date.today()
     if request.method == 'GET':
         context = {
-            'outings': Outing.objects.filter(date__gte=today),
+            'outings': sorted(Outing.objects.filter(date__gte=today), key=lambda x: x.date),
             'availabilities': [x.outing.id for x in Available.objects.filter(person=request.user.id, type=type)],
             'type': type,
             'typeName': SIGNUP_TYPES[type]
