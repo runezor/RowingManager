@@ -36,7 +36,7 @@ def erg_booking(request):
 
             book2Start = otherBooking.startTime
             book2End = time_plus(otherBooking.startTime,datetime.timedelta(hours=otherBooking.hours))
-            if (book1Start>book2Start and book1End<book2End) or (book1Start<book2Start and book1End>book2Start) or (book1Start<book2End and book1End>book2End):
+            if (book1Start>=book2Start and book1End<book2End) or (book1Start<=book2Start and book1End>=book2Start) or (book1Start<book2End and book1End>book2End):
                 return HttpResponse("Booking is overlapping")
         booking.person = request.user
         booking.save()
