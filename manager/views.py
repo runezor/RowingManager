@@ -27,13 +27,16 @@ def erg_booking(request):
         if (booking.date<datetime.date.today()):
             return HttpResponse("Can't book on a past date")
 
-        for otherBooking in ErgBooking.objects.filter(erg=booking.erg.id, date=booking.date):
+        otherBookingsOnSameErg = ErgBooking.objects.filter(erg=booking.erg.id, date=booking.date)
+        otherBookingsIMade = ErgBooking.objects.filter(person = request.user.id, date=booking.date)
+
+        for otherBooking in otherBookingsOnSameErg | otherBookingsIMade:
             book1Start = booking.startTime
             book1End = time_plus(booking.startTime,datetime.timedelta(hours=booking.hours))
 
             book2Start = otherBooking.startTime
             book2End = time_plus(otherBooking.startTime,datetime.timedelta(hours=otherBooking.hours))
-            if (book1Start>=book2Start and book1End<=book2End) or (book1Start<=book2Start and book1End>=book2Start) or (book1Start<=book2End and book1End>=book2End):
+            if (book1Start>book2Start and book1End<book2End) or (book1Start<book2Start and book1End>book2Start) or (book1Start<book2End and book1End>book2End):
                 return HttpResponse("Booking is overlapping")
         booking.person = request.user
         booking.save()
