@@ -60,5 +60,9 @@ class CreateErgWorkout(ModelForm):
         }
 
 
+class SignupUsersBulkForm(forms.Form):
+    val = forms.TextInput()
+
+
 class DeleteWorkoutForm(forms.Form):
     w_id = forms.NumberInput()

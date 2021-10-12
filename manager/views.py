@@ -4,6 +4,9 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 import datetime
 import math
+import uuid
+
+from .emailer import sendSignupDetails
 
 from .forms import *
 
@@ -62,7 +65,7 @@ def erg_manager_teams(request, team_id):
         return render(request, 'no_permission.html', {})
 
     workoutProfiles =  [{'user': User.objects.get(id=it.person.id), 'workoutDatas': [workout_create_data(w) for w in ErgWorkout.objects.filter(person=it.person.id)]} for it in InTeam.objects.filter(team=team_id)]
-    while(len(workoutProfiles)%3 is not 0):
+    while(len(workoutProfiles)%3 != 0):
         workoutProfiles.append({'isPadding': True})
 
     context = {
@@ -72,6 +75,57 @@ def erg_manager_teams(request, team_id):
     }
 
     return render(request, 'erg_manager.html', context)
+
+def signup_users_bulk(csv):
+    #Uses format timestamp,name,crsid,draw,team,experience,...
+    users = []
+    for line in csv.splitlines():
+        vals = line.split(",")
+        if len(vals)>4:
+            crsid = vals[2]
+            names = vals[1].split(" ")
+            firstname = names[0]
+            lastname = names[1] if len(names)>1 else ""
+            password = str(uuid.uuid4().hex.upper()[0:8])
+
+            #signup user
+            user=User.objects.create_user(username=crsid.lower(),email=crsid+"@cam.ac.uk",password=password)
+            user.first_name = firstname
+            user.last_name = lastname
+            users.append({"object": user, "crsid": crsid, "password": password, "team": vals[4].lower()})
+    for user in users:
+        user["object"].save()
+
+        #Consciseness? What's that?
+        teamNovice = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Novices General").id)
+        teamNovice.save()
+        if (user["team"]=="men"):
+            teamGeneral = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Mens General").id)
+            teamNovice2 = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Mens Novices").id)
+            teamGeneral.save()
+            teamNovice2.save()
+
+        if (user["team"]=="women"):
+            teamGeneral = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Womens General").id)
+            teamNovice2 = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Womens Novices").id)
+            teamGeneral.save()
+            teamNovice2.save()
+
+        sendSignupDetails(user["crsid"],user["password"])
+
+@login_required(login_url='login')
+def signup_users_bulk_view(request):
+    if not is_captain(request.user):
+        return render(request, 'no_permission.html', {})
+
+    if request.method == 'POST':
+        f = SignupUsersBulkForm(request.POST)
+
+        if f.is_valid():
+            #todo: same issue as with delete form
+            signup_users_bulk(request.POST.get('val'))
+
+    return render(request, 'signup_users_bulk.html', {})
 
 @login_required(login_url='login')
 def outing_manager_overview(request):
@@ -196,9 +250,11 @@ def signup_outing(request):
     if request.method == 'POST':
         f = SignupOutingForm(request.POST)
         a = f.save(commit=False)
+
         if (Available.objects.filter(person=request.user.id).filter(outing=a.outing, type=a.type).count() > 0):
             return HttpResponse("You already signed up!")
-        if (InTeam.objects.filter(person=request.user.id, team=a.outing.team.id).count() == 0):
+        #Only enforce team requirement if user is signing up as a rower
+        if a.type=="RW" and (InTeam.objects.filter(person=request.user.id, team=a.outing.team.id).count() == 0):
             return HttpResponse("Not in team")
         a.person = request.user
         a.save()

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Sign up users in bulk</h2>
+<form action="/signupBulk/" method="post">
+    {% csrf_token %}
+    <textarea id="val" name="val"></textarea>t
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}

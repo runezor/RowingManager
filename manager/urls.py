@@ -18,5 +18,6 @@ urlpatterns = [
     path('outings/<int:outing_id>/', views.outing_manager),
     path('ergBooking/', views.erg_booking),
     path('outings/', views.outing_manager_overview),
+    path('signupBulk/', views.signup_users_bulk_view),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
