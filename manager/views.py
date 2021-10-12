@@ -94,24 +94,27 @@ def signup_users_bulk(csv):
             user.last_name = lastname
             users.append({"object": user, "crsid": crsid, "password": password, "team": vals[4].lower()})
     for user in users:
-        user["object"].save()
+        try:
+            user["object"].save()
 
-        #Consciseness? What's that?
-        teamNovice = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Novices General").id)
-        teamNovice.save()
-        if (user["team"]=="men"):
-            teamGeneral = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Mens General").id)
-            teamNovice2 = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Mens Novices").id)
-            teamGeneral.save()
-            teamNovice2.save()
+            #Consciseness? What's that?
+            teamNovice = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Novices General").id)
+            teamNovice.save()
+            if (user["team"]=="men"):
+                teamGeneral = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Mens General").id)
+                teamNovice2 = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Mens Novices").id)
+                teamGeneral.save()
+                teamNovice2.save()
 
-        if (user["team"]=="women"):
-            teamGeneral = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Womens General").id)
-            teamNovice2 = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Womens Novices").id)
-            teamGeneral.save()
-            teamNovice2.save()
+            if (user["team"]=="women"):
+                teamGeneral = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Womens General").id)
+                teamNovice2 = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Womens Novices").id)
+                teamGeneral.save()
+                teamNovice2.save()
 
-        sendSignupDetails(user["crsid"],user["password"])
+            sendSignupDetails(user["crsid"],user["password"])
+        except:
+            print(":)")
 
 @login_required(login_url='login')
 def signup_users_bulk_view(request):
