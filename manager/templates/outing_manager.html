@@ -9,20 +9,20 @@
     {% if availability.person.id in rowers %}
     <input type="checkbox" id="check{{availability.person.id}}" name="row_{{availability.person.id}}"
            value="{{availability.person.id}}" checked>
-    <label for="check{{availability.person.id}}">{{availability.person.username}}</label><br>
+    <label for="check{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</label><br>
     {% else %}
     <input type="checkbox" id="check{{availability.person.id}}" name="row_{{availability.person.id}}"
            value="{{availability.person.id}}">
-    <label for="check{{availability.person.id}}">{{availability.person.username}}</label><br>
+    <label for="check{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</label><br>
     {% endif %}
     {% endfor %}
     <label for="cox">Choose a cox:</label>
     <select name="cox" id="cox">
         {% for availability in available_coxes %}
         {% if availability.person.id in coxes %}
-        <option selected="selected" value="{{availability.person.id}}">{{availability.person.username}}</option>
+        <option selected="selected" value="{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</option>
         {% else %}
-        <option value="{{availability.person.id}}">{{availability.person.username}}</option>
+        <option value="{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</option>
         {% endif %}
         {% endfor %}
     </select>
@@ -31,9 +31,9 @@
     <select name="coach" id="coach">
         {% for availability in available_coaches %}
         {% if availability.person.id in coaches %}
-        <option selected="selected" value="{{availability.person.id}}">{{availability.person.username}}</option>
+        <option selected="selected" value="{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</option>
         {% else %}
-        <option value="{{availability.person.id}}">{{availability.person.username}}</option>
+        <option value="{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</option>
         {% endif %}
         {% endfor %}
     </select>

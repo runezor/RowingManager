@@ -2,7 +2,9 @@
 
 {% block content %}
 <h2>Your profile</h2>
-Username: {{user.username}}
+Username: {{user.username}}<br>
+First name: {{user.first_name}}<br>
+Last name: {{user.last_name}}
 <h2>Your teams</h2>
 {% if teams|length == 0 %}
 You're not signed up for any teams at the moment

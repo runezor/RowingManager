@@ -20,7 +20,7 @@
         {% else %}
         <div class="col-xs-4 ml-md-auto col-lg">
             <div class="container-fluid p-3 mb-2 bg-light" style="height: 400px; overflow-y: scroll">
-                <h3>{{wp.user.username}}</h3>
+                <h3>{{wp.user.get_full_name}} ({{wp.user.username}})</h3>
                 <table>
                     <th>Date</th>
                     <th>Distance</th>
