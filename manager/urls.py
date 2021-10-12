@@ -20,5 +20,5 @@ urlpatterns = [
     path('outings/', views.outing_manager_overview),
     path('signupBulk/', views.signup_users_bulk_view),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/profile', views.welcome),
+    path('accounts/profile/', views.welcome),
 ]
