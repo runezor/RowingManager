@@ -100,6 +100,8 @@ def signup_users_bulk(csv):
             #Consciseness? What's that?
             teamNovice = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Novices General").id)
             teamNovice.save()
+            teamGeneral = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "General").id)
+            teamGeneral.save()
             if (user["team"]=="men"):
                 teamGeneral = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Mens General").id)
                 teamNovice2 = InTeam.objects.create(person_id = user["object"].id, team_id = Team.objects.get(name = "Mens Novices").id)
