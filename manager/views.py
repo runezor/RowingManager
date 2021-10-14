@@ -36,7 +36,7 @@ def erg_booking(request):
 
         #Allows captains to book multiple
         if (is_captain(request.user)):
-            otherBookingsIMade = []
+            otherBookingsIMade = ErgBooking.objects.none()
 
         for otherBooking in otherBookingsOnSameErg | otherBookingsIMade:
             book1Start = booking.startTime
