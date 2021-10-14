@@ -33,6 +33,10 @@ def erg_booking(request):
         otherBookingsOnSameErg = ErgBooking.objects.filter(erg=booking.erg.id, date=booking.date)
         otherBookingsIMade = ErgBooking.objects.filter(person = request.user.id, date=booking.date)
 
+        #Allows captains to book multiple
+        if (is_captain(request.user)):
+            otherBookingsIMade = []
+
         for otherBooking in otherBookingsOnSameErg | otherBookingsIMade:
             book1Start = booking.startTime
             book1End = time_plus(booking.startTime,datetime.timedelta(hours=booking.hours))
