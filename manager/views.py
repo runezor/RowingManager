@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_protect
 import datetime
 import math
 import uuid
+import re
 
 from .emailer import sendSignupDetails
 
@@ -84,7 +85,8 @@ def signup_users_bulk(csv):
     #Uses format timestamp,name,crsid,draw,team,experience,...
     users = []
     for line in csv.splitlines():
-        vals = line.split(",")
+        cleaned_line = re.sub('".*?"', "", line)
+        vals = cleaned_line.split(",")
         if len(vals)>4:
             crsid = vals[2]
             names = vals[1].split(" ")
