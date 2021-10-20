@@ -321,6 +321,17 @@ def my_workouts(request):
 
 
 @login_required(login_url='login')
+def view_crsids(request):
+
+    if not is_captain(request.user):
+        return render(request, 'no_permission.html', {})
+
+    ret = ""
+    for user in User.objects.all():
+        ret += user.username+","
+    return HttpResponse(ret)
+
+@login_required(login_url='login')
 def outing_manager(request, outing_id):
     # Todo use forms
 

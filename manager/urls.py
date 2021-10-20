@@ -21,4 +21,5 @@ urlpatterns = [
     path('signupBulk/', views.signup_users_bulk_view),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/profile/', views.welcome),
+    path('viewCRSIDS/', views.view_crsids),
 ]
