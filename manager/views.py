@@ -328,7 +328,7 @@ def view_crsids(request):
 
     ret = ""
     for user in User.objects.all():
-        ret += user.username+","
+        ret += user.username+"@cam.ac.uk,"
     return HttpResponse(ret)
 
 @login_required(login_url='login')
