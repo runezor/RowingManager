@@ -66,6 +66,9 @@ class InOuting(models.Model):
     outing = models.ForeignKey(Outing, on_delete=models.CASCADE)
     type = models.CharField(max_length=255, choices=OUTING_ROLES)
 
+    def __str__(self):
+        return self.person.username + " : " + self.outing.boat.name
+
 
 class Available(models.Model):
     OUTING_ROLES = [('RW', 'rower'), ('CX', 'cox'), ('CC', 'coach')]
