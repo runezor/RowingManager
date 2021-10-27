@@ -17,9 +17,9 @@
         <th>{{ outing.date }}</th>
         <th>{{ outing.meetingTime }}</th>
         {% if outing.id in availabilities %}
-            <th><button id="btn{{outing.id}}" onclick="signoffOuting({{outing.id}})">Remove Availability</button></th>
+            <th><button id="btn{{outing.id}}" onclick="signoffOuting({{outing.id}})">Remove availability</button></th>
         {% else %}
-            <th><button id="btn{{outing.id}}" onclick="signupOuting({{outing.id}})">Join</button></th>
+            <th><button id="btn{{outing.id}}" onclick="signupOuting({{outing.id}})">Put in availability</button></th>
         {% endif %}
     </tr>
     {% endfor %}
