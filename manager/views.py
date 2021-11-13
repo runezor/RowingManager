@@ -239,7 +239,6 @@ def signoff_outing(request):
 
 @login_required(login_url='login')
 def delete_outing(request, outing_id):
-    # Todo: Actually use the form, for some demonic reason the cleaned data is empty atm
     if request.method == 'POST' and is_captain(request.user):
         outing = Outing.objects.get(id = outing_id)
         today = datetime.date.today()
