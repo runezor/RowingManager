@@ -239,7 +239,7 @@ def signoff_outing(request):
 
 @login_required(login_url='login')
 def delete_outing(request, outing_id):
-    if request.method == 'POST' and is_captain(request.user):
+    if is_captain(request.user):
         outing = Outing.objects.get(id = outing_id)
         today = datetime.date.today()
         if outing.date>today:
