@@ -3,13 +3,20 @@
 {% block content %}
 <h2>Your upcoming outings</h2>
 <table>
+    <tr>
+        <th>Boat/Ergs</th>
+        <th>Team</th>
+        <th>Date</th>
+        <th>Meeting Time</th>
+        <th>Status</th>
+    </tr>
     {% for outing in outings %}
     <tr>
-        <th>{{ outing.boat }}</th>
-        <th>{{ outing.team }}</th>
-        <th>{{ outing.date }}</th>
-        <th>{{ outing.meetingTime }}</th>
-        <th>{{ outing.get_status_display  }}</th>
+        <td>{{ outing.boat }}</td>
+        <td>{{ outing.team }}</td>
+        <td>{{ outing.date }}</td>
+        <td>{{ outing.meetingTime }}</td>
+        <td>{{ outing.get_status_display  }}</td>
     </tr>
     {% endfor %}
 </table>

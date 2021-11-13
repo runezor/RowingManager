@@ -48,6 +48,9 @@ class Outing(models.Model):
     meetingTime = models.TimeField()
     status = models.CharField(max_length=255, choices=STATUS_TYPES)
 
+class HasBeenMailedOuting(models.Model):
+    outing = models.ForeignKey(Outing, on_delete=models.CASCADE)
+    person = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class InTeam(models.Model):
     person = models.ForeignKey(User, on_delete=models.CASCADE)

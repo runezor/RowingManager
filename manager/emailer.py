@@ -1,6 +1,8 @@
 import smtplib, ssl
 from django.conf import settings
 
+from manager.models import InOuting, HasBeenMailedOuting, Outing
+
 port = 465  # For SSL
 email_password = settings.EMAIL_HOST_PASSWORD
 
@@ -8,6 +10,44 @@ email_password = settings.EMAIL_HOST_PASSWORD
 context = ssl.create_default_context()
 
 url = "http://secbc.herokuapp.com"
+
+
+def sendOutingReminders(outing_id):
+    outing = Outing.objects.get(id = outing_id)
+
+    for inOuting in InOuting.objects.filter(outing=outing):
+        person = inOuting.person
+
+        if (HasBeenMailedOuting.objects.filter(person=person, outing=outing).count()==0):
+            try:
+                body = """<html>
+                      <head></head>
+                      <body>
+                      <p>Dear """+str(person.first_name)+""",</p>
+                      <p>You have an outing coming up on """+str(outing.date)+" at "+str(outing.meetingTime)+""".</p>
+                      <p>You can check your upcoming outings at http://secbc.herokuapp.com/myOutings/</p>
+                      <p>/SECBC Website</p>
+                      </body></html>
+                      """
+                send_email(person.username, "[SECBC WEBSITE] Outing Reminder", body)
+            finally:
+                HasBeenMailedOuting(person=person, outing=outing).save()
+
+#Todo Use Django email api instead
+def send_email(crsid, subject, body):
+    sent_from = 'secbc.web@gmail.com'
+    send_to = crsid + "@cam.ac.uk"
+    headers = [
+        "From: " + sent_from,
+        "Subject: " + subject,
+        "To: " + send_to,
+        "MIME-Version: 1.0",
+        "Content-Type: text/html"]
+    headers = "\r\n".join(headers)
+
+    with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+        server.login(sent_from, email_password)
+        server.sendmail(sent_from, send_to, headers + "\r\n\r\n" + body)
 
 
 def sendSignupDetails(crsid, password):

@@ -46,7 +46,6 @@ class BookErgForm(ModelForm):
             'erg': forms.HiddenInput()
         }
 
-
 class CreateErgWorkout(ModelForm):
     class Meta:
         model = ErgWorkout

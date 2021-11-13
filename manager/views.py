@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 import datetime
@@ -7,7 +7,7 @@ import math
 import uuid
 import re
 
-from .emailer import sendSignupDetails
+from .emailer import sendSignupDetails, sendOutingReminders
 
 from .forms import *
 
@@ -160,6 +160,17 @@ def outing_manager_overview(request):
 
     return render(request, 'outing_manager_overview.html', context)
 
+
+
+@login_required(login_url='login')
+def outing_send_reminder_emails(request, outing_id):
+    if request.method == 'POST':
+        if not is_captain(request.user):
+            return render(request, 'no_permission.html', {})
+
+        sendOutingReminders(outing_id)
+
+        return JsonResponse({'Hello':'There'})
 
 @login_required(login_url='login')
 def create_workout(request):
@@ -362,34 +373,46 @@ def outing_manager(request, outing_id):
                     o.status = value[0]
                     o.save()
                 if key == "cox":
-                    if (int(value[0]) not in av_ids):
-                        print("Cheeky")
-                        print(int(value[0]))
-                        return None
                     io = InOuting(person=User.objects.get(id=int(value[0])), type='CX', outing=o)
                     io.save()
                 elif key == "coach":
-                    if (int(value[0]) not in av_ids):
-                        print("Cheeky")
-                        print(int(value[0]))
-                        return None
                     io = InOuting(person=User.objects.get(id=int(value[0])), type='CC', outing=o)
                     io.save()
     o = Outing.objects.get(id=outing_id)
 
     coxes = [x.person.id for x in InOuting.objects.filter(outing=outing_id).filter(type='CX')]
     coaches = [x.person.id for x in InOuting.objects.filter(outing=outing_id).filter(type='CC')]
+
+    available_rower_info = []
+    for available_rower in Available.objects.filter(outing=outing_id, type='RW'):
+        available_rower_info.append({"rower": available_rower})
+
     context = {
         'outing': o,
         'available_rowers': Available.objects.filter(outing=outing_id, type='RW'),
         'available_coxes': Available.objects.filter(outing=outing_id, type='CX'),
         'available_coaches': Available.objects.filter(outing=outing_id, type='CC'),
+        'all_users': User.objects.all(),
         'rowers': [x.person.id for x in InOuting.objects.filter(outing=outing_id).filter(type='RW')],
         'coxes': coxes,
         'coaches': coaches,
     }
     return render(request, 'outing_manager.html', context)
 
+
+@login_required(login_url='login')
+def view_past_outings(request, crsid):
+    if not is_captain(request.user):
+        return render(request, 'no_permission.html', {})
+
+    today = datetime.date.today()
+    user = User.objects.get(username=crsid)
+    if request.method == 'GET':
+        context = {
+            'in_outings': sorted(InOuting.objects.filter(person=user), key=lambda x: x.outing.date),
+            'user': user
+        }
+        return render(request, 'view_past_outings.html', context)
 
 @login_required(login_url='login')
 def signup_page(request, type):

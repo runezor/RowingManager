@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.welcome),
     path('createOuting/', views.create_outing),
     path('signupSheet/<str:type>', views.signup_page),
+    path('pastOutings/<str:crsid>', views.view_past_outings),
     path('signupSheet/signup/', views.signup_outing),
     path('signupSheet/signoff/', views.signoff_outing),
     path('deleteWorkout/', views.delete_workout),
@@ -22,4 +23,5 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/profile/', views.welcome),
     path('viewCRSIDS/', views.view_crsids),
+    path('sendOutingReminderEmail/<int:outing_id>', views.outing_send_reminder_emails),
 ]
