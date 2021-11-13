@@ -24,4 +24,5 @@ urlpatterns = [
     path('accounts/profile/', views.welcome),
     path('viewCRSIDS/', views.view_crsids),
     path('sendOutingReminderEmail/<int:outing_id>', views.outing_send_reminder_emails),
+    path('deleteOuting/<int:outing_id>', views.delete_outing),
 ]

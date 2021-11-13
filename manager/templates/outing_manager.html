@@ -60,6 +60,7 @@
     <br><br>
     <input type="submit" class="btn btn-primary" value="Update">
 <button id="reminder-button" class="btn btn-warning">Send reminder emails</button>
+<button id="delete-button" class="btn btn-danger">Delete outing</button>
 </form>
 <br>
 <a href="/outings/" class="btn btn-secondary">Back</a>
@@ -82,5 +83,30 @@
         alert('Done!');
       }
     });
+
+
+    const deleteButton = document.getElementById('delete-button');
+
+    deleteButton.addEventListener('click', async _ => {
+
+    if (confirm('Are you sure?')) {
+          try {
+            const response = await fetch('/deleteOuting/{{outing.id}}', {
+              method: 'post',
+              headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+                },
+              credentials: 'same-origin'
+            });
+            window.location.replace("/outings/");
+          } catch(err) {
+            //Todo: Why is this getting fired?
+            window.location.replace("/outings/");
+          }
+        }
+    }
+
+    );
+
 </script>
 {% endblock %}

@@ -238,6 +238,21 @@ def signoff_outing(request):
 
 
 @login_required(login_url='login')
+def delete_outing(request, outing_id):
+    # Todo: Actually use the form, for some demonic reason the cleaned data is empty atm
+    if request.method == 'POST' and is_captain(request.user):
+        outing = Outing.objects.get(id = outing_id)
+        today = datetime.date.today()
+        if outing.date>today:
+            outing.delete()
+            return HttpResponse("Success!")
+        else:
+            return HttpResponse("You can't delete active/past outings")
+    else:
+        return None
+
+
+@login_required(login_url='login')
 def delete_erg_booking(request):
     # Todo: Actually use the form, for some demonic reason the cleaned data is empty atm
     if request.method == 'POST':
