@@ -119,7 +119,7 @@ def signup_user(request):
             teamGeneral.save()
             teamNovice2.save()
 
-        #sendSignupDetails(crsid, password)
+        sendSignupDetails(crsid, password)
         return HttpResponse("Done!")
 
     return render(request, 'signup_user.html', {})
