@@ -10,16 +10,23 @@
 <br>
 <br>
 <table>
+    <tr>
+        <th>Boat</th>
+        <th>Team</th>
+        <th>Date</th>
+        <th>Meeting Time</th>
+        <th>Set availability</th>
+    </tr>
     {% for outing in outings %}
     <tr>
-        <th>{{ outing.boat }}</th>
-        <th>{{ outing.team }}</th>
-        <th>{{ outing.date }}</th>
-        <th>{{ outing.meetingTime }}</th>
+        <td>{{ outing.boat }}</td>
+        <td>{{ outing.team }}</td>
+        <td>{{ outing.date }}</td>
+        <td>{{ outing.meetingTime }}</td>
         {% if outing.id in availabilities %}
-            <th><button id="btn{{outing.id}}" onclick="signoffOuting({{outing.id}})">Remove availability</button></th>
+            <td><button id="btn{{outing.id}}" onclick="signoffOuting({{outing.id}})">Remove availability</button></td>
         {% else %}
-            <th><button id="btn{{outing.id}}" onclick="signupOuting({{outing.id}})">Put in availability</button></th>
+            <td><button id="btn{{outing.id}}" onclick="signupOuting({{outing.id}})">Put in availability</button></td>
         {% endif %}
     </tr>
     {% endfor %}

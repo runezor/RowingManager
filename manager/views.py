@@ -81,6 +81,49 @@ def erg_manager_teams(request, team_id):
 
     return render(request, 'erg_manager.html', context)
 
+@login_required(login_url='login')
+def signup_user(request):
+    if not is_captain(request.user):
+        return render(request, 'no_permission.html', {})
+
+    if request.method == 'POST':
+        crsid = request.POST.get('crsid')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        team = request.POST.get('team')
+
+        password = str(uuid.uuid4().hex.upper()[0:8])
+
+        user = User.objects.create_user(username=crsid.lower(), email=crsid + "@cam.ac.uk", password=password)
+        user.first_name = first_name
+        user.last_name = last_name
+
+        teamNovice = InTeam.objects.create(person_id=user.id,
+                                           team_id=Team.objects.get(name="Novices General").id)
+        teamNovice.save()
+        teamGeneral = InTeam.objects.create(person_id=user.id, team_id=Team.objects.get(name="General").id)
+        teamGeneral.save()
+        if (team == "men"):
+            teamGeneral = InTeam.objects.create(person_id=user.id,
+                                                team_id=Team.objects.get(name="Mens General").id)
+            teamNovice2 = InTeam.objects.create(person_id=user.id,
+                                                team_id=Team.objects.get(name="Mens Novices").id)
+            teamGeneral.save()
+            teamNovice2.save()
+
+        if (team == "women"):
+            teamGeneral = InTeam.objects.create(person_id=user.id,
+                                                team_id=Team.objects.get(name="Womens General").id)
+            teamNovice2 = InTeam.objects.create(person_id=user.id,
+                                                team_id=Team.objects.get(name="Womens Novices").id)
+            teamGeneral.save()
+            teamNovice2.save()
+
+        #sendSignupDetails(crsid, password)
+        return HttpResponse("Done!")
+
+    return render(request, 'signup_user.html', {})
+
 def signup_users_bulk(csv):
     #Uses format timestamp,name,crsid,draw,team,experience,...
     users = []
@@ -228,9 +271,12 @@ def signoff_outing(request):
     if request.method == 'POST':
         form = SignupOutingForm(request.POST)
         if form.is_valid():
-            Available.objects.filter(person=request.user.id).filter(outing=form.cleaned_data['outing'],
+            if (InOuting.objects.filter(person=request.user.id,outing=form.cleaned_data['outing']).count()==0):
+                Available.objects.filter(person=request.user.id).filter(outing=form.cleaned_data['outing'],
                                                                     type=form.cleaned_data['type']).delete()
-            return HttpResponse("Success!")
+                return HttpResponse("Success!")
+            else:
+                return HttpResponse("You're currently set to be in this outing. Please get in contact with your captain if you can't make it.")
         else:
             return HttpResponse("Error!")
     else:

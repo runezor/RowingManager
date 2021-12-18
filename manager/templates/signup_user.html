@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Sign up new user</h2>
+<form action="/signup/" method="post">
+    {% csrf_token %}
+    <label for="crsid">CRSID</label>
+    <input type="text"  id="crsid" name="crsid">
+    <br>
+    <label for="first_name">First name</label>
+    <input type="text"  id="first_name" name="first_name">
+    <br>
+    <label for="last_name">Last name</label>
+    <input type="text"  id="last_name" name="last_name">
+    <br>
+    <label for="team">Team</label>
+    <select id="team" name="team">
+      <option value="men">Mens</option>
+      <option value="women">Women</option>
+    </select>
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}
