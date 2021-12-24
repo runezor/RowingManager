@@ -32,6 +32,11 @@ class CreateOutingForm(ModelForm):
 class SignupOutingForm(ModelForm):
     class Meta:
         model = Available
+        fields = ['outing', 'type', 'comment']
+
+class SignoffOutingForm(ModelForm):
+    class Meta:
+        model = Available
         fields = ['outing', 'type']
 
 

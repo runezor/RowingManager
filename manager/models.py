@@ -78,6 +78,7 @@ class Available(models.Model):
     person = models.ForeignKey(User, on_delete=models.CASCADE)
     outing = models.ForeignKey(Outing, on_delete=models.CASCADE)
     type = models.CharField(max_length=255, choices=OUTING_ROLES)
+    comment = models.CharField(max_length=255, blank=True)
 
 
 class ErgWorkout(models.Model):

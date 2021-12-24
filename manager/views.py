@@ -269,7 +269,7 @@ SIGNUP_TYPES = {"RW": "rower", "CX": "cox", "CC": "coach"}
 @login_required(login_url='login')
 def signoff_outing(request):
     if request.method == 'POST':
-        form = SignupOutingForm(request.POST)
+        form = SignoffOutingForm(request.POST)
         if form.is_valid():
             if (InOuting.objects.filter(person=request.user.id,outing=form.cleaned_data['outing']).count()==0):
                 Available.objects.filter(person=request.user.id).filter(outing=form.cleaned_data['outing'],
@@ -483,7 +483,8 @@ def signup_page(request, type):
     if request.method == 'GET':
         context = {
             'outings': sorted(Outing.objects.filter(date__gte=today), key=lambda x: x.date),
-            'availabilities': [x.outing.id for x in Available.objects.filter(person=request.user.id, type=type)],
+            'availability_ids': [x.outing.id for x in Available.objects.filter(person=request.user.id, type=type)],
+            'comments': {x.outing.id: x.comment for x in Available.objects.filter(person=request.user.id, type=type)},
             'type': type,
             'typeName': SIGNUP_TYPES[type]
         }

@@ -16,6 +16,7 @@
         <th>Date</th>
         <th>Meeting Time</th>
         <th>Set availability</th>
+        <th>Add comment</th>
     </tr>
     {% for outing in outings %}
     <tr>
@@ -23,10 +24,16 @@
         <td>{{ outing.team }}</td>
         <td>{{ outing.date }}</td>
         <td>{{ outing.meetingTime }}</td>
-        {% if outing.id in availabilities %}
+        {% if outing.id in availability_ids %}
             <td><button id="btn{{outing.id}}" onclick="signoffOuting({{outing.id}})">Remove availability</button></td>
+                {% for key, value in comments.items %}
+                 {% if key == outing.id %}
+                    <td><input type="text" id="text{{outing.id}}" value="{{value}}"></td>
+                 {% endif %}
+                {% endfor %}
         {% else %}
             <td><button id="btn{{outing.id}}" onclick="signupOuting({{outing.id}})">Put in availability</button></td>
+            <td><input type="text" id="text{{outing.id}}"></td>
         {% endif %}
     </tr>
     {% endfor %}
@@ -35,8 +42,10 @@
 <script>
     function signupOuting(id) {
         let dataForm = new FormData();
+        let comment = document.getElementById("text"+id).value
         dataForm.append('outing',id)
         dataForm.append('type','{{type}}')
+        dataForm.append('comment',comment?comment:"")
         var btn = document.getElementById('btn'+id)
 
         body = {
