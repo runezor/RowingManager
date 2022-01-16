@@ -2,6 +2,7 @@
 
 {% block content %}
   <h2>Sign up new user</h2>
+This form will autogenerate a new password for the user, and mail it to them.
 <form action="/signup/" method="post">
     {% csrf_token %}
     <label for="crsid">CRSID</label>

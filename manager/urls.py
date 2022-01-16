@@ -14,6 +14,7 @@ urlpatterns = [
     path('createWorkout/', views.create_workout),
     path('myWorkouts/', views.my_workouts),
     path('ergManager/teams/<int:team_id>', views.erg_manager_teams),
+    path('testEmailer/<str:crsid>', views.test_emailer),
     path('myOutings/', views.my_outings),
     path('myProfile/', views.my_profile),
     path('outings/<int:outing_id>/', views.outing_manager),

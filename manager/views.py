@@ -82,6 +82,15 @@ def erg_manager_teams(request, team_id):
     return render(request, 'erg_manager.html', context)
 
 @login_required(login_url='login')
+def test_emailer(request, crsid):
+    if not is_captain(request.user):
+        return render(request, 'no_permission.html', {})
+    sendSignupDetails(crsid, "123")
+    return HttpResponse("Done")
+
+
+
+@login_required(login_url='login')
 def signup_user(request):
     if not is_captain(request.user):
         return render(request, 'no_permission.html', {})
@@ -97,6 +106,7 @@ def signup_user(request):
         user = User.objects.create_user(username=crsid.lower(), email=crsid + "@cam.ac.uk", password=password)
         user.first_name = first_name
         user.last_name = last_name
+        user.save()
 
         teamNovice = InTeam.objects.create(person_id=user.id,
                                            team_id=Team.objects.get(name="Novices General").id)

@@ -44,7 +44,8 @@ def send_email(crsids, subject, body):
     headers = [
         "From: " + sent_from,
         "Subject: " + subject,
-        "To: " + send_to,
+        "To: " + "stedmunds.captain@cucbc.org",
+        "Bcc: " + send_to,
         "MIME-Version: 1.0",
         "Content-Type: text/html"]
     headers = "\r\n".join(headers)
