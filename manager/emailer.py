@@ -39,20 +39,23 @@ def sendOutingReminders(outing_id):
 
 # Todo Use Django email api instead
 def send_email(crsids, subject, body):
-    sent_from = 'secbc.web@gmail.com'
-    send_to = ",".join([crsid + "@cam.ac.uk" for crsid in crsids])
-    headers = [
-        "From: " + sent_from,
-        "Subject: " + subject,
-        "To: " + "stedmunds.captain@cucbc.org",
-        "Bcc: " + send_to,
-        "MIME-Version: 1.0",
-        "Content-Type: text/html"]
-    headers = "\r\n".join(headers)
-
     with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+        sent_from = 'secbc.web@gmail.com'
         server.login(sent_from, email_password)
-        server.sendmail(sent_from, send_to, headers + "\r\n\r\n" + body)
+        i = True
+        for email in [crsid + "@cam.ac.uk" for crsid in crsids]:
+            send_to = email
+            headers = [
+                "From: " + sent_from,
+                "Subject: " + subject,
+                "To: " + email,
+                "MIME-Version: 1.0",
+                "Content-Type: text/html"]
+            if i:
+                headers += ['CC: stedmunds.captain@cucbc.org']
+                i = False
+            headers = "\r\n".join(headers)
+            server.sendmail(sent_from, send_to, headers + "\r\n\r\n" + body)
 
 
 def sendSignupDetails(crsid, password):
