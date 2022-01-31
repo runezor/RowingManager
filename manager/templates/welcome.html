@@ -28,7 +28,9 @@ Here are the pages you may find interesting...
 </ul>
   </div>
   <div class="p-2 ml-auto">
+    {% if announcements %}
     <h3>Announcements</h3>
+    {% endif %}
     {% for announcement in announcements %}
     <h5>{{announcement.title}}</h5>
     <h6>Posted {{announcement.created_at}}</h6>
