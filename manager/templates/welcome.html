@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="d-flex flex-row">
+<div class="p-2">
   <h2>Welcome!</h2>
 Here are the pages you may find interesting...
 <ul>
@@ -24,4 +26,15 @@ Here are the pages you may find interesting...
   <li><a href="/signup">Sign up single user (captains only) </a></li>
   <li><a href="/signupBulk">Sign up users in bulk (captains only) </a></li>
 </ul>
+  </div>
+  <div class="p-2 ml-auto">
+    <h3>Announcements</h3>
+    {% for announcement in announcements %}
+    <h5>{{announcement.title}}</h5>
+    <h6>Posted {{announcement.created_at}}</h6>
+    {{announcement.text |safe}}
+    <br><br>
+    {% endfor %}
+  </div>
+  </div>
 {% endblock %}

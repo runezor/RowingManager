@@ -24,15 +24,27 @@
     <label for="cox"><b>Choose a cox:</b></label><br>
     These people have expressed availability for coxing:
     {% for availability in available_coxes %}
+    <br>
     {{availability.person.get_full_name}} ({{availability.person.username}})
+    {% if availability.comment.strip %}
+    <br>
+    <i>{{availability.comment}}</i>
+    {% endif %}
     {% endfor %}
     <br>
     <select name="cox" id="cox">
+        {% for availability in available_coxes %}
+            {% if user.id in coxes %}
+            <option value="{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</option>
+            {% else %}
+            <option selected="selected" value="{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</option>
+        {% endif %}
+        {% endfor %}
         {% for user in all_users %}
-        {% if user.id in coxes %}
-        <option selected="selected" value="{{user.id}}">{{user.get_full_name}} ({{user.username}})</option>
-        {% else %}
-        <option value="{{user.id}}">{{user.get_full_name}} ({{user.username}})</option>
+            {% if user.id in coxes %}
+            <option selected="selected"   value="{{user.id}}">{{user.get_full_name}} ({{user.username}})</option>
+            {% else %}
+            <option value="{{user.id}}">{{user.get_full_name}} A({{user.username}})</option>
         {% endif %}
         {% endfor %}
     </select>
@@ -40,10 +52,22 @@
     <label for="cox"><b>Choose a coach:</b></label><br>
     These people have expressed availability for coaching:
     {% for availability in available_coaches %}
-    <p>{{availability.person.get_full_name}} ({{availability.person.username}})</p>
+    <br>
+    {{availability.person.get_full_name}} ({{availability.person.username}})
+    {% if availability.comment.strip %}
+    <br>
+    <i>{{availability.comment}}</i>
+    {% endif %}
     {% endfor %}
     <br>
     <select name="coach" id="coach">
+        {% for availability in available_coaches %}
+            {% if user.id in coaches %}
+            <option value="{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</option>
+            {% else %}
+            <option selected="selected" value="{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</option>
+        {% endif %}
+        {% endfor %}
         {% for user in all_users %}
         {% if user.id in coaches %}
         <option selected="selected" value="{{user.id}}">{{user.get_full_name}} ({{user.username}})</option>

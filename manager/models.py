@@ -9,7 +9,6 @@ class Erg(models.Model):
     def __str__(self):
         return self.name
 
-
 class ErgBooking(models.Model):
     erg = models.ForeignKey(Erg, on_delete=models.CASCADE)
     person = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -39,6 +38,17 @@ class Team(models.Model):
     def __str__(self):
         return self.name
 
+class Announcement(models.Model):
+    title = models.CharField(max_length=255)
+    text = models.TextField()
+    isTeamSpecific = models.BooleanField()
+    team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    priority = models.IntegerField()
+
+    def __str__(self):
+        return self.title
 
 class Outing(models.Model):
     STATUS_TYPES = [('P', 'Pending'), ('CF', 'confirmed'), ('CC', 'cancelled')]

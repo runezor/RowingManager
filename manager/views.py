@@ -357,7 +357,13 @@ def signup_outing(request):
 
 @login_required(login_url='login')
 def welcome(request):
-    return render(request, 'welcome.html')
+    announcements = sorted([x for x in Announcement.objects.all() if ((not x.isTeamSpecific) or InTeam.objects.filter(person=request.user.id).filter(team=x.team.id).count()>0)], key = lambda a: a.priority, reverse=True)
+
+    context = {
+        'announcements': announcements,
+    }
+
+    return render(request, 'welcome.html', context)
 
 
 @login_required(login_url='login')
