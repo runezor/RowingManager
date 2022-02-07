@@ -17,7 +17,7 @@
     <tr>
         <td>{{ outing.boat }}</td>
         <td>{{ outing.team }}</td>
-        <td>{{ outing.date | date:"l"}}, {{outing.date}}</td>
+        <td>{{ outing.date | date:"l d. M"}}</td>
         <td>{{ outing.meetingTime }}</td>
                 {% if outing.id in availability_rw_ids %}
                     <td><button class="btn btn-primary" id="btn{{outing.id}}-RW" onclick="signoffOuting({{outing.id}}, 'RW')">Remove</button></td>

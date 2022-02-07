@@ -2,7 +2,7 @@
 
 {% block content %}
 <h2>Managing outing for {{outing.boat}}, {{outing.team}}</h2>
-<h5>{{outing.date | date:"l"}}, {{outing.date}}, {{outing.meetingTime}}</h5>
+<h5>{{outing.date | date:"l d. M"}}, {{outing.meetingTime}}</h5>
 
 <form action="/outings/{{outing.id}}/" method="post">
     {% csrf_token %}
