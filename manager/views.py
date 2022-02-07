@@ -491,17 +491,16 @@ def view_past_outings(request, crsid):
         return render(request, 'view_past_outings.html', context)
 
 @login_required(login_url='login')
-def signup_page(request, type):
-    if type not in SIGNUP_TYPES.keys():
-        return HttpResponse("Type doesn't exist!")
-
+def signup_page(request):
     today = datetime.date.today()
     if request.method == 'GET':
         context = {
             'outings': sorted(Outing.objects.filter(date__gte=today), key=lambda x: x.date),
-            'availability_ids': [x.outing.id for x in Available.objects.filter(person=request.user.id, type=type)],
-            'comments': {x.outing.id: x.comment for x in Available.objects.filter(person=request.user.id, type=type)},
-            'type': type,
-            'typeName': SIGNUP_TYPES[type]
+            'availability_ids': [x.outing.id for x in Available.objects.filter(person=request.user.id)],
+            'availability_rw_ids': [x.outing.id for x in Available.objects.filter(person=request.user.id, type='RW')],
+            'availability_cx_ids': [x.outing.id for x in Available.objects.filter(person=request.user.id, type='CX')],
+            'availability_cc_ids': [x.outing.id for x in Available.objects.filter(person=request.user.id, type='CC')],
+            'comments': {x.outing.id: x.comment for x in Available.objects.filter(person=request.user.id)},
         }
+
         return render(request, 'signup_sheet.html', context)

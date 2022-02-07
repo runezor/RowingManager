@@ -21,7 +21,7 @@
     <tr>
         <th>{{ oData.outing.boat }}</th>
         <th>{{ oData.outing.team }}</th>
-        <th>{{ oData.outing.date }}</th>
+        <th>{{ oData.outing.date | date:"l"}}, {{oData.outing.date}}</th>
         <th>{{ oData.outing.meetingTime }}</th>
         <th {% if oData.rowerSignup < oData.outing.boat.size %} style="background-color: red" {% else %} style="background-color: green" {% endif %}>{{ oData.rowerSignup }}</th>
         <th {% if oData.coxSignup < 1 %} style="background-color: red" {% else %} style="background-color: green" {% endif %}>{{ oData.coxSignup }}</th>

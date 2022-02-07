@@ -1,38 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Sign up for outings as a {{typeName}}</h2>
-<select name="form" onchange="location = this.value;">
- <option {% if type == "RW" %} selected="selected" {% endif %} value="RW">Rower</option>
- <option {% if type == "CX" %} selected="selected" {% endif %} value="CX">Cox</option>
- <option {% if type == "CC" %} selected="selected" {% endif %} value="CC">Coach</option>
-</select>
-<br>
-<br>
+<h2>Sign up for outings</h2>
 <table>
     <tr>
         <th>Boat</th>
         <th>Team</th>
         <th>Date</th>
         <th>Meeting Time</th>
-        <th>Set availability</th>
+        <th>Available to row</th>
+        <th>Available to cox</th>
+        <th>Available to coach</th>
         <th>Add comment</th>
     </tr>
     {% for outing in outings %}
     <tr>
         <td>{{ outing.boat }}</td>
         <td>{{ outing.team }}</td>
-        <td>{{ outing.date }}</td>
+        <td>{{ outing.date | date:"l"}}, {{outing.date}}</td>
         <td>{{ outing.meetingTime }}</td>
+                {% if outing.id in availability_rw_ids %}
+                    <td><button class="btn btn-primary" id="btn{{outing.id}}-RW" onclick="signoffOuting({{outing.id}}, 'RW')">Remove</button></td>
+                {% else %}
+                    <td><button class="btn btn-secondary" id="btn{{outing.id}}-RW" onclick="signupOuting({{outing.id}}, 'RW')">Signup</button></td>
+                {% endif %}
+                {% if outing.id in availability_cx_ids %}
+                    <td><button class="btn btn-primary" id="btn{{outing.id}}-CX" onclick="signoffOuting({{outing.id}}, 'CX')">Remove</button></td>
+                {% else %}
+                    <td><button class="btn btn-secondary" id="btn{{outing.id}}-CX" onclick="signupOuting({{outing.id}}, 'CX')">Signup</button></td>
+                {% endif %}
+                {% if outing.id in availability_cc_ids %}
+                    <td><button class="btn btn-primary" id="btn{{outing.id}}-CC" onclick="signoffOuting({{outing.id}}, 'CC')">Remove</button></td>
+                {% else %}
+                    <td><button class="btn btn-secondary" id="btn{{outing.id}}-CC" onclick="signupOuting({{outing.id}}, 'CC')">Signup</button></td>
+                {% endif %}
         {% if outing.id in availability_ids %}
-            <td><button id="btn{{outing.id}}" onclick="signoffOuting({{outing.id}})">Remove availability</button></td>
                 {% for key, value in comments.items %}
                  {% if key == outing.id %}
                     <td><input type="text" id="text{{outing.id}}" value="{{value}}"></td>
                  {% endif %}
                 {% endfor %}
         {% else %}
-            <td><button id="btn{{outing.id}}" onclick="signupOuting({{outing.id}})">Put in availability</button></td>
             <td><input type="text" id="text{{outing.id}}"></td>
         {% endif %}
     </tr>
@@ -40,13 +48,13 @@
 </table>
 
 <script>
-    function signupOuting(id) {
+    function signupOuting(id,type) {
         let dataForm = new FormData();
         let comment = document.getElementById("text"+id).value
         dataForm.append('outing',id)
-        dataForm.append('type','{{type}}')
+        dataForm.append('type',type)
         dataForm.append('comment',comment?comment:"")
-        var btn = document.getElementById('btn'+id)
+        var btn = document.getElementById('btn'+id+'-'+type)
 
         body = {
             method: 'post',
@@ -59,11 +67,11 @@
         fetch('signup/', body).then(response => response.text()).then(data => (data=="Success!")?btn.disabled=true:alert(data))
     }
 
-    function signoffOuting(id) {
+    function signoffOuting(id, type) {
         let dataForm = new FormData();
         dataForm.append('outing',id)
-        dataForm.append('type','{{type}}')
-        var btn = document.getElementById('btn'+id)
+        dataForm.append('type',type)
+        var btn = document.getElementById('btn'+id+'-'+type)
 
         body = {
             method: 'post',

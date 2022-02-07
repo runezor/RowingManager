@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     path('', views.welcome),
     path('createOuting/', views.create_outing),
-    path('signupSheet/<str:type>', views.signup_page),
+    path('signupSheet/', views.signup_page),
     path('pastOutings/<str:crsid>', views.view_past_outings),
     path('signupSheet/signup/', views.signup_outing),
     path('signupSheet/signoff/', views.signoff_outing),

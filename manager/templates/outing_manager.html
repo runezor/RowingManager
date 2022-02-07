@@ -2,7 +2,7 @@
 
 {% block content %}
 <h2>Managing outing for {{outing.boat}}, {{outing.team}}</h2>
-<h5>{{outing.date}}, {{outing.meetingTime}}</h5>
+<h5>{{outing.date | date:"l"}}, {{outing.date}}, {{outing.meetingTime}}</h5>
 
 <form action="/outings/{{outing.id}}/" method="post">
     {% csrf_token %}
@@ -27,7 +27,6 @@
     <br>
     {{availability.person.get_full_name}} ({{availability.person.username}})
     {% if availability.comment.strip %}
-    <br>
     <i>{{availability.comment}}</i>
     {% endif %}
     {% endfor %}
@@ -35,16 +34,16 @@
     <select name="cox" id="cox">
         {% for availability in available_coxes %}
             {% if user.id in coxes %}
-            <option value="{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</option>
+            <option value="{{availability.person.id}}">*{{availability.person.get_full_name}} ({{availability.person.username}})</option>
             {% else %}
-            <option selected="selected" value="{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</option>
+            <option selected="selected" value="{{availability.person.id}}">*{{availability.person.get_full_name}} ({{availability.person.username}})</option>
         {% endif %}
         {% endfor %}
         {% for user in all_users %}
             {% if user.id in coxes %}
             <option selected="selected"   value="{{user.id}}">{{user.get_full_name}} ({{user.username}})</option>
             {% else %}
-            <option value="{{user.id}}">{{user.get_full_name}} A({{user.username}})</option>
+            <option value="{{user.id}}">{{user.get_full_name}} ({{user.username}})</option>
         {% endif %}
         {% endfor %}
     </select>
@@ -55,7 +54,6 @@
     <br>
     {{availability.person.get_full_name}} ({{availability.person.username}})
     {% if availability.comment.strip %}
-    <br>
     <i>{{availability.comment}}</i>
     {% endif %}
     {% endfor %}
@@ -63,9 +61,9 @@
     <select name="coach" id="coach">
         {% for availability in available_coaches %}
             {% if user.id in coaches %}
-            <option value="{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</option>
+            <option value="{{availability.person.id}}">*{{availability.person.get_full_name}} ({{availability.person.username}})</option>
             {% else %}
-            <option selected="selected" value="{{availability.person.id}}">{{availability.person.get_full_name}} ({{availability.person.username}})</option>
+            <option selected="selected" value="{{availability.person.id}}">*{{availability.person.get_full_name}} ({{availability.person.username}})</option>
         {% endif %}
         {% endfor %}
         {% for user in all_users %}
