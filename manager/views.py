@@ -208,7 +208,7 @@ def outing_manager_overview(request):
                        ]
 
     context = {
-        'outingData': sorted(od, key=lambda x: x["outing"].date)
+        'outingData': sorted(od, key=lambda x: (x["outing"].date, x["outing"].meetingTime))
     }
 
     return render(request, 'outing_manager_overview.html', context)
@@ -385,7 +385,7 @@ def my_outings(request):
     today = datetime.date.today()
 
     context = {
-        'outings': sorted(filter(lambda x: x.date >= today, outings), key=lambda x: x.date),
+        'outings': sorted(filter(lambda x: x.date >= today, outings), key=lambda x: (x.date, x.meetingTime)),
     }
     return render(request, 'view_outings.html', context)
 
