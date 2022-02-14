@@ -1,8 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Sign up for outings</h2>
-<table>
+<div style="display: flex">
+    <h2>Sign up for outings</h2>
+    <div style="margin-left: 12px" class="dropdown">
+      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Filter
+      </button>
+      <div class="dropdown-menu allow-focus" aria-labelledby="dropdownMenuButton">
+          {% for team in teams %}
+                <label class="dropdown-item" style="margin-right: 8px"><input type='checkbox' {{team.isMember|yesno:"checked,''" }} onclick='checkFilter("{{team.value.name}}", this);'>{{team.value.name}}</label>
+          {% endfor %}
+      </div>
+    </div>
+</div>
+
+
+<table id="signupTable">
     <tr>
         <th>Boat</th>
         <th>Team</th>
@@ -48,6 +62,33 @@
 </table>
 
 <script>
+    function checkFilter(teamname, cb){
+        filter(teamname, !cb.checked)
+    }
+
+    function filter(teamName, hide) {
+      table = document.getElementById("signupTable");
+      tr = table.getElementsByTagName("tr");
+
+        console.log(teamName)
+        console.log(hide)
+
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+          teamValue = td.textContent || td.innerText;
+          if (teamValue == teamName) {
+            if (hide) {
+                tr[i].style.display = "none";
+            } else {
+                tr[i].style.display = "";
+            }
+          }
+        }
+      }
+    }
+
     function signupOuting(id,type) {
         let dataForm = new FormData();
         let comment = document.getElementById("text"+id).value
@@ -83,6 +124,14 @@
         }
         fetch('signoff/', body).then(response => response.text()).then(data => (data=="Success!")?btn.disabled=true:alert(data))
     }
+
+{% for team in teams %}
+    filter("{{team.value.name}}",{{team.isMember|yesno:"false,true"}});
+{% endfor %}
+
+$('.dropdown-menu').on('click', function(e) {
+  e.stopPropagation();
+});
 </script>
 {% endblock %}
 

@@ -496,6 +496,7 @@ def signup_page(request):
     if request.method == 'GET':
         context = {
             'outings': sorted(Outing.objects.filter(date__gte=today), key=lambda x: (x.date, x.meetingTime)),
+            'teams': [{"isMember": InTeam.objects.filter(id = team.id, person=request.user.id).count()>0, "value": team } for team in Team.objects.all()],
             'availability_ids': [x.outing.id for x in Available.objects.filter(person=request.user.id)],
             'availability_rw_ids': [x.outing.id for x in Available.objects.filter(person=request.user.id, type='RW')],
             'availability_cx_ids': [x.outing.id for x in Available.objects.filter(person=request.user.id, type='CX')],
