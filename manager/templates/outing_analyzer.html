@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Outings for {{user.username}}</h2>
+
+<table>
+    <tr>
+        <th>Boat/Ergs</th>
+        <th>Team</th>
+        <th>Date</th>
+        <th>Meeting Time</th>
+        <th>Status</th>
+        <th>Count</th>
+    </tr>
+    {% for oaug in outings_aug %}
+    <tr>
+        <td>{{ oaug.outing.boat }}</td>
+        <td>{{ oaug.outing.team }}</td>
+        <td>{{ oaug.outing.date }}</td>
+        <td>{{ oaug.outing.meetingTime }}</td>
+        <td>{{ oaug.outing.get_status_display  }}</td>
+        <td>{{ oaug.count  }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

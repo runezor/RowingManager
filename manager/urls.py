@@ -25,6 +25,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/profile/', views.welcome),
     path('viewCRSIDS/', views.view_crsids),
+    path('analyse/<str:s>', views.outing_analyser),
     path('sendOutingReminderEmail/<int:outing_id>', views.outing_send_reminder_emails),
     path('deleteOuting/<int:outing_id>', views.delete_outing),
 ]

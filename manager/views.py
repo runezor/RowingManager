@@ -505,3 +505,26 @@ def signup_page(request):
         }
 
         return render(request, 'signup_sheet.html', context)
+
+
+@login_required(login_url='login')
+def outing_analyser(request, s):
+    # Todo use forms
+
+    if not is_captain(request.user):
+        return render(request, 'no_permission.html', {})
+
+    outings_aug = []
+
+    crsids = s.split(",")
+
+    for o in Outing.objects.all():
+        i = 0
+        for io in InOuting.objects.filter(outing = o.id):
+            if io.person.username in crsids:
+                i += 1
+        outings_aug += [{"count": i, "outing": o}]
+
+    outings_aug = sorted(outings_aug, reverse=True, key=lambda x: x["count"])
+
+    return render(request, 'outing_analyzer.html', {"outings_aug": outings_aug})
