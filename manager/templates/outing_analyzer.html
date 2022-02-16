@@ -10,6 +10,7 @@
         <th>Date</th>
         <th>Meeting Time</th>
         <th>Status</th>
+        <th>Users</th>
         <th>Count</th>
     </tr>
     {% for oaug in outings_aug %}
@@ -19,6 +20,7 @@
         <td>{{ oaug.outing.date }}</td>
         <td>{{ oaug.outing.meetingTime }}</td>
         <td>{{ oaug.outing.get_status_display  }}</td>
+        <td>{{ oaug.people_string  }}</td>
         <td>{{ oaug.count  }}</td>
     </tr>
     {% endfor %}

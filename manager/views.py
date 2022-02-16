@@ -520,10 +520,12 @@ def outing_analyser(request, s):
 
     for o in Outing.objects.all():
         i = 0
+        outing_names = []
         for io in InOuting.objects.filter(outing = o.id):
             if io.person.username in crsids:
                 i += 1
-        outings_aug += [{"count": i, "outing": o}]
+                outing_names += io.person.first_name + " " + io.person.last_name+ " ("+io.person.username+")"
+        outings_aug += [{"count": i, "outing": o, 'people_string': ",".join(outing_names)}]
 
     outings_aug = sorted(outings_aug, reverse=True, key=lambda x: x["count"])
 
