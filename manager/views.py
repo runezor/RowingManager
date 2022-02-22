@@ -553,7 +553,7 @@ def get_rower_csv(request):
     writer.writerow(cols)
     for user in User.objects.all():
         row = [user.username, user.first_name, user.last_name]
-        inTeams = [x.id for x in InTeam.objects.filter(person = user.id)]
+        inTeams = [x.team.id for x in InTeam.objects.filter(person = user.id)]
         for team_id in team_ids:
             if team_id in inTeams:
                 row += ["Yes"]
