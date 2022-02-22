@@ -6,6 +6,7 @@ import datetime
 import math
 import uuid
 import re
+import csv
 
 from .emailer import sendSignupDetails, sendOutingReminders
 
@@ -530,3 +531,34 @@ def outing_analyser(request, s):
     outings_aug = sorted(outings_aug, reverse=True, key=lambda x: x["count"])
 
     return render(request, 'outing_analyzer.html', {"outings_aug": outings_aug})
+
+# For captains
+def get_rower_csv(request):
+    if not is_captain(request.user):
+        return render(request, 'no_permission.html', {})
+
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(
+        content_type='text/csv',
+        headers={'Content-Disposition': 'attachment; filename="rowers.csv"'},
+    )
+
+    writer = csv.writer(response)
+    cols = ['CRSID', 'First name', 'Last name']
+    team_ids = []
+    for team in Team.objects.all():
+        cols += [team.name]
+        team_ids += [team.id]
+
+    writer.writerow(cols)
+    for user in User.objects.all():
+        row = [user.username, user.first_name, user.last_name]
+        inTeams = [x.id for x in InTeam.objects.filter(person = user.id)]
+        for team_id in team_ids:
+            if team_id in inTeams:
+                row += ["Yes"]
+            else:
+                row += ["No"]
+        writer.writerow(row)
+
+    return response
