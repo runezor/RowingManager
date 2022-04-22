@@ -18,6 +18,7 @@ urlpatterns = [
     path('myOutings/', views.my_outings),
     path('myProfile/', views.my_profile),
     path('outings/<int:outing_id>/', views.outing_manager),
+    path('outings/<int:outing_id>/addTeam/', views.outing_manager_add_team_availability),
     path('ergBooking/', views.erg_booking),
     path('outings/', views.outing_manager_overview),
     path('signup/', views.signup_user),
@@ -27,6 +28,7 @@ urlpatterns = [
     path('viewCRSIDS/', views.view_crsids),
     path('analyse/<str:s>', views.outing_analyser),
     path('sendOutingReminderEmail/<int:outing_id>', views.outing_send_reminder_emails),
-    path('deleteOuting/<int:outing_id>', views.delete_outing),
+    path('sendOutingReminderEmail/<int:outing_id>/', views.outing_send_reminder_emails),
+    path('deleteOuting/<int:outing_id>/', views.delete_outing),
     path('getRowerCSV/', views.get_rower_csv),
 ]

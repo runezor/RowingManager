@@ -419,6 +419,47 @@ def view_crsids(request):
         ret += user.username+"@cam.ac.uk,"
     return HttpResponse(ret)
 
+def outing_manager_context(outing_id):
+    o = Outing.objects.get(id=outing_id)
+
+    coxes = [x.person.id for x in InOuting.objects.filter(outing=outing_id).filter(type='CX')]
+    coaches = [x.person.id for x in InOuting.objects.filter(outing=outing_id).filter(type='CC')]
+    teams = [team for team in Team.objects.all()]
+
+    available_rower_info = []
+    for available_rower in Available.objects.filter(outing=outing_id, type='RW'):
+        available_rower_info.append({"rower": available_rower})
+
+    return {
+        'outing': o,
+        'available_rowers': Available.objects.filter(outing=outing_id, type='RW'),
+        'available_coxes': Available.objects.filter(outing=outing_id, type='CX'),
+        'available_coaches': Available.objects.filter(outing=outing_id, type='CC'),
+        'all_users': User.objects.all(),
+        'rowers': [x.person.id for x in InOuting.objects.filter(outing=outing_id).filter(type='RW')],
+        'coxes': coxes,
+        'coaches': coaches,
+        'teams': teams
+    }
+
+
+@login_required(login_url='login')
+def outing_manager_add_team_availability(request, outing_id):
+    if not is_captain(request.user):
+        return render(request, 'no_permission.html', {})
+
+    av_ids = [a.person.id for a in Available.objects.filter(outing=outing_id)]
+
+    if request.method == 'POST':
+        teamId = request.POST.get('team')
+        for inTeam in InTeam.objects.filter(team = teamId):
+            if inTeam.person.id not in av_ids:
+                #Add person to availabilities
+                av = Available(person = inTeam.person, outing = Outing.objects.get(id=outing_id), type="RW", comment="")
+                av.save()
+
+    return render(request, 'outing_manager.html', outing_manager_context(outing_id))
+
 @login_required(login_url='login')
 def outing_manager(request, outing_id):
     # Todo use forms
@@ -455,26 +496,8 @@ def outing_manager(request, outing_id):
                 elif key == "coach":
                     io = InOuting(person=User.objects.get(id=int(value[0])), type='CC', outing=o)
                     io.save()
-    o = Outing.objects.get(id=outing_id)
 
-    coxes = [x.person.id for x in InOuting.objects.filter(outing=outing_id).filter(type='CX')]
-    coaches = [x.person.id for x in InOuting.objects.filter(outing=outing_id).filter(type='CC')]
-
-    available_rower_info = []
-    for available_rower in Available.objects.filter(outing=outing_id, type='RW'):
-        available_rower_info.append({"rower": available_rower})
-
-    context = {
-        'outing': o,
-        'available_rowers': Available.objects.filter(outing=outing_id, type='RW'),
-        'available_coxes': Available.objects.filter(outing=outing_id, type='CX'),
-        'available_coaches': Available.objects.filter(outing=outing_id, type='CC'),
-        'all_users': User.objects.all(),
-        'rowers': [x.person.id for x in InOuting.objects.filter(outing=outing_id).filter(type='RW')],
-        'coxes': coxes,
-        'coaches': coaches,
-    }
-    return render(request, 'outing_manager.html', context)
+    return render(request, 'outing_manager.html', outing_manager_context(outing_id))
 
 
 @login_required(login_url='login')
