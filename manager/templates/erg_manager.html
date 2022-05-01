@@ -22,12 +22,14 @@
             <div class="container-fluid p-3 mb-2 bg-light" style="height: 400px; overflow-y: scroll">
                 <h3>{{wp.user.get_full_name}} ({{wp.user.username}})</h3>
                 <table>
+                    <th>Title</th>
                     <th>Date</th>
                     <th>Distance</th>
                     <th>Time</th>
                     <th>Split</th>
                     {% for wd in wp.workoutDatas %}
                     <tr>
+                        <th>{{ wd.workout.title }}</th>
                         <th>{{ wd.workout.date }}</th>
                         <th>{{ wd.workout.distance }}</th>
                         <th>{{ wd.workout.minutes }}:{% if wd.workout.seconds < 10 %}0{% endif %}{{ wd.workout.seconds }}:{{wd.workout.subSeconds }}

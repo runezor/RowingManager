@@ -93,6 +93,7 @@ class Available(models.Model):
 
 class ErgWorkout(models.Model):
     person = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, blank=True)
     date = models.DateField()
     distance = models.IntegerField()
     minutes = models.IntegerField()

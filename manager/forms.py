@@ -54,8 +54,9 @@ class BookErgForm(ModelForm):
 class CreateErgWorkout(ModelForm):
     class Meta:
         model = ErgWorkout
-        fields = ['date', 'distance', 'minutes', 'seconds', 'subSeconds']
+        fields = ['title', 'date', 'distance', 'minutes', 'seconds', 'subSeconds']
         widgets = {
+            'title': forms.TextInput(),
             'date': DateInput(),
             'distance': NumberInput(attrs={'min': '0', 'max': '99999', 'step': 1}),
             'minutes': NumberInput(attrs={'min': '0', 'max': '999', 'step': 1}),

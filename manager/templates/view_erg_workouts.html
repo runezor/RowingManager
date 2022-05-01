@@ -3,6 +3,7 @@
 {% block content %}
 <h2>Register new erg workout</h2>
 <table>
+    <th>Title</th>
     <th>Date</th>
     <th>Distance</th>
     <th>Time</th>
@@ -10,6 +11,7 @@
     <th></th>
     {% for wd in workoutData %}
     <tr>
+        <th>{{ wd.workout.title }}</th>
         <th>{{ wd.workout.date }}</th>
         <th>{{ wd.workout.distance }}</th>
         <th>{{ wd.workout.minutes }}:{% if wd.workout.seconds < 10 %}0{% endif %}{{ wd.workout.seconds }}:{{ wd.workout.subSeconds }}</th>
